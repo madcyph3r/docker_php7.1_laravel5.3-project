@@ -1,0 +1,56 @@
+version: "2"
+services:
+  nginx:
+      build:
+          context: ./nginx
+      ports:
+          - "8080:80"
+      volumes:
+          - ./app/public/laravel-project:/var/app
+      networks:
+          - laravel-net
+  nginx_php:
+      build:
+          context: ./nginx_php
+      ports:
+          - "8081:80"
+      volumes:
+          - ./app/public/php:/var/app
+      networks:
+          - php-net
+  fpm:
+      build:
+          context: ./fpm
+      volumes:
+          - ./app/public/laravel-project:/var/app
+      expose:
+          - "9000"
+      environment:
+          - "DB_HOST=db"
+          - "DB_DATABASE=laravel"
+      networks:
+          - laravel-net
+          - php-net
+  fpm_php:
+      build:
+          context: ./fpm_php
+      volumes:
+          - ./app/public/php:/var/app
+      expose:
+          - "9001"
+      networks:
+          - php-net
+  db:
+      image: mariadb
+      environment:
+          - MYSQL_ROOT_PASSWORD=root
+          - MYSQL_DATABASE=laravel
+      volumes:
+          - ./database:/var/lib/mysql
+      networks:
+          - laravel-net
+networks:
+  laravel-net:
+      driver: bridge
+  php-net:
+      driver: bridge

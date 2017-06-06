@@ -15,7 +15,8 @@ docker-compose up
 ~~~
 ├── app
 │   └── public
-│       └── index.php
+│       └── php (normal php files)
+│       └── laravel-project (laravel-project files)
 ├── database
 ├── docker-compose.yml
 ├── fpm (laravel project)
